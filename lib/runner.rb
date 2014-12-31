@@ -1,13 +1,25 @@
+require './lib/messages'
 require './lib/mastermind'
 
-puts "Welcome to Mastermind"
+messages = Messeges.new
+mastermind = Mastermind.new(messages)
 
-input = ""
-mastermind = Mastermind.new
+puts messages.welcome_messege
 
-while input != "q"
-  print "> "
+signal :continue
+
+until signal == :stop
   input = gets.chomp
-  puts mastermind.execute(input)
+  message, signal = mastermind.execute(input)
+  puts message
 end
-puts "Goodbye!"
+
+# input = ""
+# mastermind = Mastermind.new
+#
+# while input != "q"
+#   print "> "
+#   input = gets.chomp
+#   puts mastermind.execute(input)
+# end
+# puts "Goodbye!"
