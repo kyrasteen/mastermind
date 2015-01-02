@@ -1,7 +1,7 @@
-require './lib/messages'
-require './lib/mastermind'
+require_relative 'messages'
+require_relative 'mastermind'
 
-messages = Messeges.new
+messages = Messages.new
 mastermind = Mastermind.new(messages)
 
 puts messages.welcome_messege
@@ -13,13 +13,3 @@ until signal == :stop
   message, signal = mastermind.execute(input)
   puts message
 end
-
-# input = ""
-# mastermind = Mastermind.new
-#
-# while input != "q"
-#   print "> "
-#   input = gets.chomp
-#   puts mastermind.execute(input)
-# end
-# puts "Goodbye!"

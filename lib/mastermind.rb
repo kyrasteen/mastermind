@@ -1,4 +1,5 @@
-require_relative 'messeges'
+require_relative 'messages'
+require 'pry'
 
 class Mastermind
 
@@ -11,22 +12,10 @@ class Mastermind
   end
 
   def execute(input)
-
     if !game_in_progress
       game_menu(input)
     else
       play_game(input)
-    end
-
-    # secret = "BBGB"
-    # if input == secret
-    #   "You win!"
-    # else
-    #   "Guess again!"
-    # end
-
-    if input == 'q'
-      return [messages.end_round, :continue]
     end
   end
 
@@ -37,50 +26,55 @@ class Mastermind
       [messages.take_guess, :continue]
     elsif input == 'q'
       [messages.quit_game, :stop]
+    elsif input == 'i'
+      [messages.instructions, :continue]
+    else
+      [messages.error, :continue]
     end
   end
 
   def play_game(input)
+    input = input.split('')
+    invalids = input.select do |i|
+      i.capitalize != "R" || "G" || "B" || "Y"
+    end
+
     if input == 'q'
       return [messages.end_round, :continue]
-    end
-
-    #what if entry is more than four items?
-    if input.length > 4
+    elsif input.length > 4
       return [messages.too_many, :continue]
-    end
-    #if an el of input has a letter not representing a color
-    #array, return message and continue
-    guesses = input.map do |i|
-      i.include?('Q')
-    end
-
-    if guesses[2] == true
+    elsif invalids.length > 0
       return [messages.invalid_letter, :continue]
-    end
+    else
 
+      #if guess includes a letter that entry includes
+      #return correct color message
 
-    guess = input#.split('')
-    guess = guess.map { |letter| letter.upcase}
-    matched = @secret.zip(guess)
+      input = input.map { |letter| letter.upcase}
+      matched = @secret.zip(input)
 
-    match = 0
-     matched.each do |a|
-      if a[0] == a[1]
-        match += 1 #can my other class see colors?
-      end
-      [messages.exact_match, :continue]
-    end
-
-    #if guess includes a letter that entry includes
-    #return correct color message
-    colors = guess.find_all { |letter| @secret.include?(letter)} #what does this return?
+      #exceptions - guess = rgbb secret = gbrr
+      colors = input.find_all { |letter| @secret.include? }
+      #FIX returns array of true/false
       if colors.length > 0
         [messages.color_match, :continue]
-        match = colors.length
+        # match = colors.length
       end
 
+  #needs to find the number of matches and position
+      match = matched.find_index do |a|
+            a[0] == a[1]
+        #can my other class see match?
+      end
 
+      if match.length == 4
+        [messages.win, :continue]
+      else
+        [messages.exact_match, :continue]
+      end
+    end
   end
-
 end
+messages = Messages.new
+mm = Mastermind.new(messages)
+mm.execute('p')

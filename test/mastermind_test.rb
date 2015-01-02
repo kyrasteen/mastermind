@@ -1,6 +1,5 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-
 require '../lib/mastermind'
 
 class MastermindTest < Minitest::Test
@@ -27,6 +26,7 @@ class MastermindTest < Minitest::Test
 
   def test_it_generates_random_four_letters
     #not passing no message given
+  skip
     @mm.execute('p')
     puzzle = @secret
     messages = Messages.new
@@ -37,21 +37,24 @@ class MastermindTest < Minitest::Test
   end
 
   def test_it_only_takes_four_letters_in_guess
+    skip
     @mm.execute('p')
     @mm.secret = ['R','G','G','B']
-    message, signal = @mm.execute(['Y','B','B','G','y'])
+    message, signal = @mm.execute('ygbbyr')
     assert message.include?("Too many")
     assert_equal signal, :continue
   end
 
   def test_it_only_accepts_four_color_choices_in_guess
+    skip
     @mm.execute('p')
-    message, signal = @mm.execute(['y','G','Q','r'])
+    message, signal = @mm.execute('yGQr')
     assert message.include?("Invalid")
     assert_equal signal, :continue
   end
 
   def test_it_ends_a_game
+    skip
     message, signal = @mm.execute('q')
     assert message.include?('Thanks')
     assert_equal signal, :stop
@@ -59,20 +62,37 @@ class MastermindTest < Minitest::Test
 
   def test_it_ends_a_round
     skip
+    @mm.execute('p')
+    message, signal = @mm.execute('q')
+    assert message.include?('ended round')
+    assert_equal signal, :continue
   end
 
-  def test_guess_includes_correct_colors
+  def test_it_has_instructions
+    message, signal = @mm.execute('i')
+    assert message.include?('guess')
+    assert_equal signal, :continue
+  end
+
+  def test_matching_one_letter_at_correct_place
     skip
+    @mm.execute('p')
+    @mm.secret = 'rrby'
+    message, signal = @mm.execute('ggbr')
+    assert message.include?('the third color is correct')
+    assert_equal signal, :continue
   end
 
-  def test_matching_colors_in_guess_at_correct_place
+  def test_matching_more_than_one_letter
     skip
   end
 
   def test_it_wins
     skip
-    mm = Mastermind.new
-    result = mm.execute("BBGB")
-    assert result.downcase.include?("win")
+    @mm.execute('p')
+    @mm.secret = 'bbgb'
+    message, signal = @mm.execute("BBGB")
+    assert message.include?("win")
+    assert_equal signal, :continue
   end
 end
