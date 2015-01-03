@@ -1,4 +1,3 @@
-require_relative 'mastermind'
 
 class Messages
 
@@ -11,21 +10,11 @@ class Messages
   end
 
   def error
-    "Error please only enter 'p','q', or 'i'."
-  end
-
-  def exact_match
-    puts "You got #{match.length} matches."
-    "Match at position #{match.join(',')}"
-  end
-
-  def color_match
-    puts "You guessed #{colors.length} colors correctly"
-    "Colors:#{colors.join(',')}"
+    "Error please only enter 'p','q', or 'i'.\n>"
   end
 
   def end_round
-    "Thanks for playing this round!"
+    "You have ended this round. Thanks for playing!\n>"
   end
 
   def quit_game
@@ -33,19 +22,19 @@ class Messages
   end
 
   def take_guess
-    "What do you think the secret is?"
+    "What do you think the secret is? \n>"
   end
 
   def invalid_letter
-    "Invalid letter, please only choose between 'R', 'B', 'G', and 'Y'"
+    "Invalid letter, please only choose between 'R', 'B', 'G', and 'Y'\n>"
   end
 
   def too_many
-    "Too many items. Please only enter four items."
+    "Too many items. Please only enter four items.\n>"
   end
 
   def win
-    "Correct! You have won the game!"
+    "Correct! You have won the game!\n>"
   end
 
 end

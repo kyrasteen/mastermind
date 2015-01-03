@@ -20,8 +20,10 @@ class MastermindTest < Minitest::Test
 
   def test_it_starts_a_game
     assert @mm.secret.nil?
-    @mm.execute('p')
-    assert @mm.secret.is_a?(Array)  #string or array?
+    message, signal = @mm.execute('p')
+    assert @mm.secret.is_a?(Array)
+    assert message.include?('Welcome')
+    assert_equal signal, :continue
   end
 
   def test_it_generates_random_four_letters
@@ -37,34 +39,30 @@ class MastermindTest < Minitest::Test
   end
 
   def test_it_only_takes_four_letters_in_guess
-    skip
     @mm.execute('p')
-    @mm.secret = ['R','G','G','B']
+    @mm.secret = 'RGGB'.split(',')
     message, signal = @mm.execute('ygbbyr')
     assert message.include?("Too many")
     assert_equal signal, :continue
   end
 
   def test_it_only_accepts_four_color_choices_in_guess
-    skip
     @mm.execute('p')
-    message, signal = @mm.execute('yGQr')
+    message, signal = @mm.execute('yGKr')
     assert message.include?("Invalid")
     assert_equal signal, :continue
   end
 
   def test_it_ends_a_game
-    skip
     message, signal = @mm.execute('q')
     assert message.include?('Thanks')
     assert_equal signal, :stop
   end
 
   def test_it_ends_a_round
-    skip
     @mm.execute('p')
     message, signal = @mm.execute('q')
-    assert message.include?('ended round')
+    assert message.include?('ended this round')
     assert_equal signal, :continue
   end
 
@@ -75,22 +73,24 @@ class MastermindTest < Minitest::Test
   end
 
   def test_matching_one_letter_at_correct_place
-    skip
     @mm.execute('p')
-    @mm.secret = 'rrby'
+    @mm.secret = 'rrby'.split(',')
     message, signal = @mm.execute('ggbr')
-    assert message.include?('the third color is correct')
+    assert message.include?('3')
     assert_equal signal, :continue
   end
 
   def test_matching_more_than_one_letter
-    skip
+    @mm.execute('p')
+    @mm.secret = 'yygg'.split(',')
+    message, signal = @mm.execute('YYgr')
+    assert message.include?('3')
+    assert signal, :continue
   end
 
   def test_it_wins
-    skip
     @mm.execute('p')
-    @mm.secret = 'bbgb'
+    @mm.secret = 'bbgb'.split(',')
     message, signal = @mm.execute("BBGB")
     assert message.include?("win")
     assert_equal signal, :continue

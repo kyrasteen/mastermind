@@ -19,9 +19,14 @@ class Mastermind
     end
   end
 
+  def generate_secret(size = 4)
+    charset = %w{B G R Y}
+    (0...size).map{ charset.to_a[rand(charset.size)] }
+  end
+
   def game_menu(input)
     if input == 'p'
-      @secret = ['R','G','B','Y'].shuffle
+      @secret = generate_secret
       @game_in_progress = true
       [messages.take_guess, :continue]
     elsif input == 'q'
@@ -34,47 +39,64 @@ class Mastermind
   end
 
   def play_game(input)
-    input = input.split('')
-    invalids = input.select do |i|
-      i.capitalize != "R" || "G" || "B" || "Y"
-    end
 
     if input == 'q'
       return [messages.end_round, :continue]
-    elsif input.length > 4
+    end
+
+    input = input.split('')
+
+    if input.length > 4
       return [messages.too_many, :continue]
-    elsif invalids.length > 0
+    end
+
+    invalids = input.select do |i|
+      i =~ /[^rgby]/
+    end
+
+    if invalids.length > 0
       return [messages.invalid_letter, :continue]
-    else
+    end
 
-      #if guess includes a letter that entry includes
-      #return correct color message
-
+    if
       input = input.map { |letter| letter.upcase}
       matched = @secret.zip(input)
+      colors = []
 
-      #exceptions - guess = rgbb secret = gbrr
-      colors = input.find_all { |letter| @secret.include? }
-      #FIX returns array of true/false
+      input.find_all do |letter|
+        if @secret.include?(letter)
+          colors << letter
+        end
+      end
+
+      color_match = puts "You guessed #{colors.uniq.length} colors correctly. Colors:#{colors.uniq.join(',')}"
+
       if colors.length > 0
-        [messages.color_match, :continue]
-        # match = colors.length
-      end
-
-  #needs to find the number of matches and position
-      match = matched.find_index do |a|
-            a[0] == a[1]
-        #can my other class see match?
-      end
-
-      if match.length == 4
-        [messages.win, :continue]
+        [color_match, :continue]
       else
-        [messages.exact_match, :continue]
+        puts "You guessed no colors correctly. Really? Try again!\n>"
+      end
+
+      match = []
+      matched.each do |a|
+            if a[0] == a[1]
+              puts "You guessed the color '#{a[0]}' in the correct position!"
+            match << matched.index(a) + 1
+          end
+      end
+
+       if match.length.zero?
+          ["You guessed no positions correctly", :continue]
+       elsif match.length == 4
+         [messages.win, :continue]
+      else
+        exact_match = "Matched at position #{match.join(',')}"
+        [exact_match, :continue]
       end
     end
   end
 end
+
 messages = Messages.new
 mm = Mastermind.new(messages)
 mm.execute('p')
