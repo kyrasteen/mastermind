@@ -47,53 +47,46 @@ class Mastermind
     end
   end
 
-  def exceptions(input)
-    input = input.upcase.split('')
-    invalids = input.select do |i|
+  def invalids(input)
+    invalids = input.upcase.split('').select do |i|
       i =~ /[^RGBY]/
     end
+    if invalids.length > 0
+      return [messages.invalid_letter, :continue]
+    end
+  end
 
+  def exceptions(input)
     if input == 'q'
       return [messages.end_round, :continue]
     elsif input == 'quit'
       return [messages.quit_game, :stop]
     elsif input == 'i'
       return [messages.instructions, :continue]
+      #########################
     elsif input == 'h'
-      return ["#{input[3]} is in the last position ", :continue]
-    elsif invalids.length > 0
-      return [messages.invalid_letter, :continue]
+      return ["#{input.upcase.split('')[3]} is in the last position ", :continue]
     elsif input.length != 4
       return [messages.wrong_number, :continue]
     end
   end
 
   def color_match(input)
-    colors = input.find_all { |letter| @secret.include?(letter) }
+    colors = input.upcase.split('').find_all { |letter| @secret.include?(letter) }
 
-    color_match = puts "'#{input.join('')}' has #{colors.uniq.length} correct colors."
+    color_match = puts "'#{input}' has #{colors.uniq.length} correct colors."
 
     if colors.length > 0
       @guess_count += 1
       [color_match, :continue]
     else
       @guess_count += 1
-      puts "'#{input.join('')}' has no colors guessed correctly. Really? Try again!\n>"
+      puts "'#{input}' has no colors guessed correctly. Really? Try again!\n>"
     end
   end
 
-  def play_game(input)
-
-    puts exceptions(input)
-    ####need to return method if this method returns anything
-
-    start_time = Time.now
-
-    input = input.upcase.split('')
-
-    color_match(input)
-
-    matched = @secret.zip(input)
+  def exact_match(input)
+    matched = @secret.zip(input.upcase.split(''))
 
     match = matched.select { |a| a[0] == a[1] }
 
@@ -103,9 +96,22 @@ class Mastermind
       timer = Time.now - start_time
       puts ["Congratulations! You have won the game with sequence '#{input.join('')}'!\n You took #{@guess_count} guesses and took #{timer}.\n Hit 'p' to play again or 'quit' to quit.>", :continue]
     else
-      exact_match =  puts "'#{input.join('')}' has #{match.length} letters at the correct position."
+      exact_match =  puts "'#{input}' has #{match.length} letters at the correct position."
       [exact_match, :continue]
     end
+  end
+
+  def play_game(input)
+    return if exceptions(input)
+    ####need to return method if this method returns anything
+    return if invalids(input)
+    ############################
+    start_time = Time.now
+
+    color_match(input)
+
+    exact_match(input)
+
     guess_count
   end
 end

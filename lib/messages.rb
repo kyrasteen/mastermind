@@ -2,7 +2,7 @@
 class Messages
 
   def welcome_message
-    "Welcome to MASTERMIND, \nhit 'p' for play, 'i' for instructions, 'h' for hint after game has begun,'q' to quit a round, or 'quit' to end a game!"
+    "Welcome to MASTERMIND, \nhit 'p' for play, 'i' for instructions, 'h' for hint after game has begun,'q' to quit a round, or 'quit' to end a game!\n> "
   end
 
   def instructions
