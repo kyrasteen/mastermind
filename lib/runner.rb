@@ -10,6 +10,6 @@ signal = :continue
 
 until signal == :stop
   input = gets.chomp
-  message, signal = mastermind.execute(input)
-  puts message
+  output, signal = mastermind.execute(input)
+  puts output
 end

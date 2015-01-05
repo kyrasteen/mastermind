@@ -3,12 +3,13 @@ require 'pry'
 
 class Mastermind
 
-  attr_reader :messages, :game_in_progress, :colors, :match
-  attr_accessor :secret
+  attr_reader :messages, :game_in_progress
+  attr_accessor :secret, :guess_count
 
   def initialize(messages)
     @messages = messages
     @game_in_progress = false
+    @guess_count = 0
   end
 
   def execute(input)
@@ -38,62 +39,74 @@ class Mastermind
     end
   end
 
-  def play_game(input)
+  def guess_count
+    if @guess_count > 1
+      puts "You have guessed #{@guess_count} times"
+    else
+      puts "You have guessed one time."
+    end
+  end
+
+  def exceptions(input)
+    input = input.upcase.split('')
+    invalids = input.select do |i|
+      i =~ /[^RGBY]/
+    end
 
     if input == 'q'
       return [messages.end_round, :continue]
-    end
-
-    input = input.split('')
-
-    if input.length > 4
-      return [messages.too_many, :continue]
-    end
-
-    invalids = input.select do |i|
-      i =~ /[^rgby]/
-    end
-
-    if invalids.length > 0
+    elsif input == 'quit'
+      return [messages.quit_game, :stop]
+    elsif input == 'i'
+      return [messages.instructions, :continue]
+    elsif input == 'h'
+      return ["#{input[3]} is in the last position ", :continue]
+    elsif invalids.length > 0
       return [messages.invalid_letter, :continue]
+    elsif input.length != 4
+      return [messages.wrong_number, :continue]
     end
+  end
 
-    if
-      input = input.map { |letter| letter.upcase}
-      matched = @secret.zip(input)
-      colors = []
+  def color_match(input)
+    colors = input.find_all { |letter| @secret.include?(letter) }
 
-      input.find_all do |letter|
-        if @secret.include?(letter)
-          colors << letter
-        end
-      end
+    color_match = puts "'#{input.join('')}' has #{colors.uniq.length} correct colors."
 
-      color_match = puts "You guessed #{colors.uniq.length} colors correctly. Colors:#{colors.uniq.join(',')}"
-
-      if colors.length > 0
-        [color_match, :continue]
-      else
-        puts "You guessed no colors correctly. Really? Try again!\n>"
-      end
-
-      match = []
-      matched.each do |a|
-            if a[0] == a[1]
-              puts "You guessed the color '#{a[0]}' in the correct position!"
-            match << matched.index(a) + 1
-          end
-      end
-
-       if match.length.zero?
-          ["You guessed no positions correctly", :continue]
-       elsif match.length == 4
-         [messages.win, :continue]
-      else
-        exact_match = "Matched at position #{match.join(',')}"
-        [exact_match, :continue]
-      end
+    if colors.length > 0
+      @guess_count += 1
+      [color_match, :continue]
+    else
+      @guess_count += 1
+      puts "'#{input.join('')}' has no colors guessed correctly. Really? Try again!\n>"
     end
+  end
+
+  def play_game(input)
+
+    puts exceptions(input)
+    ####need to return method if this method returns anything
+
+    start_time = Time.now
+
+    input = input.upcase.split('')
+
+    color_match(input)
+
+    matched = @secret.zip(input)
+
+    match = matched.select { |a| a[0] == a[1] }
+
+    if match.length.zero?
+      puts ["You guessed no positions correctly", :continue]
+    elsif match.length == 4
+      timer = Time.now - start_time
+      puts ["Congratulations! You have won the game with sequence '#{input.join('')}'!\n You took #{@guess_count} guesses and took #{timer}.\n Hit 'p' to play again or 'quit' to quit.>", :continue]
+    else
+      exact_match =  puts "'#{input.join('')}' has #{match.length} letters at the correct position."
+      [exact_match, :continue]
+    end
+    guess_count
   end
 end
 

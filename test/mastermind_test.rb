@@ -12,87 +12,96 @@ class MastermindTest < Minitest::Test
   end
 
   def test_it_exists
-    assert MastermindTest
+    assert Mastermind
   end
-
-#if this does not pass make sure passing in a 'p' is an exception
-#to the four letters in entry requirement
 
   def test_it_starts_a_game
     assert @mm.secret.nil?
-    message, signal = @mm.execute('p')
+    output, signal = @mm.execute('p')
     assert @mm.secret.is_a?(Array)
-    assert message.include?('Welcome')
+    assert output.include?('What do you think')
     assert_equal signal, :continue
   end
 
   def test_it_generates_random_four_letters
-    #not passing no message given
-  skip
     @mm.execute('p')
-    puzzle = @secret
+    puzzle = @mm.secret
     messages = Messages.new
     master = Mastermind.new(messages)
     master.execute('p')
-    puzzler = @secret
+    puzzler = master.secret
     assert puzzle != puzzler
   end
 
   def test_it_only_takes_four_letters_in_guess
     @mm.execute('p')
-    @mm.secret = 'RGGB'.split(',')
-    message, signal = @mm.execute('ygbbyr')
-    assert message.include?("Too many")
+    @mm.secret = 'RGGB'.split('')
+    output, signal = @mm.execute('ygbbyr')
+    assert output.include?("Please enter")
     assert_equal signal, :continue
   end
 
   def test_it_only_accepts_four_color_choices_in_guess
     @mm.execute('p')
-    message, signal = @mm.execute('yGKr')
-    assert message.include?("Invalid")
+    output, signal = @mm.execute('yGKr')
+    assert output.include?("Invalid")
     assert_equal signal, :continue
   end
 
   def test_it_ends_a_game
-    message, signal = @mm.execute('q')
-    assert message.include?('Thanks')
+    output, signal = @mm.execute('q')
+    assert output.include?('Thanks')
     assert_equal signal, :stop
   end
 
   def test_it_ends_a_round
     @mm.execute('p')
-    message, signal = @mm.execute('q')
-    assert message.include?('ended this round')
+    output, signal = @mm.execute('q')
+    assert output.include?('ended this round')
     assert_equal signal, :continue
   end
 
   def test_it_has_instructions
-    message, signal = @mm.execute('i')
-    assert message.include?('guess')
+    output, signal = @mm.execute('i')
+    assert output.include?('guess')
     assert_equal signal, :continue
+  end
+
+  def test_it_gives_a_hint
+    @mm.execute('p')
+    output, signal = @mm.execute('h')
+    assert output.include?('last position')
+    assert signal, :continue
   end
 
   def test_matching_one_letter_at_correct_place
     @mm.execute('p')
-    @mm.secret = 'rrby'.split(',')
-    message, signal = @mm.execute('ggbr')
-    assert message.include?('3')
+    @mm.secret = 'rrby'.split('')
+    output, signal = @mm.execute('ggbr')
+    assert output.include?('correct')
     assert_equal signal, :continue
   end
 
   def test_matching_more_than_one_letter
     @mm.execute('p')
-    @mm.secret = 'yygg'.split(',')
-    message, signal = @mm.execute('YYgr')
-    assert message.include?('3')
+    @mm.secret = 'yygg'.split('')
+    output, signal = @mm.execute('Yggg')
+    assert output.include?('correct')
     assert signal, :continue
+  end
+
+  def test_it_keeps_count_of_guesses
+    @mm.execute('p')
+    @mm.execute('gggy')
+    @mm.execute('gbgr')
+    assert_equal @mm.guess_count, 2
   end
 
   def test_it_wins
     @mm.execute('p')
-    @mm.secret = 'bbgb'.split(',')
-    message, signal = @mm.execute("BBGB")
-    assert message.include?("win")
+    @mm.secret = 'bbgb'.split('')
+    output, signal = @mm.execute("bbgb")
+    assert output.include?("correct")
     assert_equal signal, :continue
   end
 end
