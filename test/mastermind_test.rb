@@ -1,10 +1,8 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require '../lib/mastermind'
+require_relative '../lib/mastermind'
 
 class MastermindTest < Minitest::Test
-
-  attr_reader :mm
 
   def setup
     messages = Messages.new
@@ -21,16 +19,6 @@ class MastermindTest < Minitest::Test
     assert @mm.secret.is_a?(Array)
     assert output.include?('What do you think')
     assert_equal signal, :continue
-  end
-
-  def test_it_generates_random_four_letters
-    @mm.execute('p')
-    puzzle = @mm.secret
-    messages = Messages.new
-    master = Mastermind.new(messages)
-    master.execute('p')
-    puzzler = master.secret
-    assert puzzle != puzzler
   end
 
   def test_it_only_takes_four_letters_in_guess

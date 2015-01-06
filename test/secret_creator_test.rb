@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require '../lib/secret_creator'
+require_relative '../lib/secret_creator'
 
 class SecretCreatorTest < Minitest::Test
 
