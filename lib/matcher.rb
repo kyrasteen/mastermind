@@ -11,9 +11,7 @@ class Matcher
   end
 
   def correct_colors
-    colors = guess.upcase.split('').find_all { |letter|
-      # require 'pry'; binding.pry
-      secret.include?(letter) }
+    colors = guess.split('').find_all { |letter| secret.include?(letter) }
     colors.uniq.length
     # @guess_count += 1
 
