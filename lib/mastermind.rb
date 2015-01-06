@@ -1,6 +1,7 @@
 require_relative 'messages'
 require_relative 'secret_creator'
 require_relative 'game_menu'
+require_relative 'matcher'
 require 'pry'
 
 class Mastermind
@@ -16,11 +17,6 @@ class Mastermind
     @secret = SecretCreator.new.generate_secret
   end
 
-  # Add an active/not active state to the menu
-  # When the manu is active, keep running the menu loop
-  # When the game is active, run play_game
-  #   If the menu is inactive, the game is active
-  #   Also have @active instance variable
   def execute(input)
     if menu.active?
       menu.menu(input)
@@ -59,56 +55,21 @@ class Mastermind
     end
   end
 
-  def color_match(input)
-    colors = input.upcase.split('').find_all { |letter| secret.include?(letter) }
-    colors = colors.uniq
-    @guess_count += 1
-
-    if colors.length >= 2
-      "'#{input}' has #{colors.length} correct colors."
-    elsif colors.length == 1
-      "'#{input}' has #{colors.length} correct color."
-    else
-      "'#{input}' has no colors guessed correctly. Really? Try again!"
-    end
-  end
-
-  def exact_match(input)
-    matched = secret.zip(input.upcase.split(''))
-    match = matched.select { |a| a[0] == a[1] }
-
-    if match.length.zero?
-      "You guessed no positions correctly"
-    elsif match.length == 4
-      end_time = Time.now
-      timer = end_time - @start_time
-      "Congratulations! You have won the game with sequence '#{input}'!\n You took #{@guess_count} guesses and took #{timer}.\n Hit 'p' to play again or 'quit' to quit."
-    elsif match.length == 1
-      "'#{input}' has #{match.length} letter at the correct position."
-    else
-      "'#{input}' has #{match.length} letters at the correct position."
-    end
-  end
-
   def play_game(input)
     @start_time = Time.now
+    puts "Secret: #{secret}"
 
-    # checking for non-guess input
-    # do guess validations (break out to separate class)
     return exceptions(input) if exceptions(input)
     return invalids(input) if invalids(input)
 
-    # doing the actual matching
-    # matcher = Matcher.new(input, secret)
-    # if matcher.correct?
-    #   win conditions
-    # else
-    #   puts messages.print_correct_colors(matcher.correct_colors)
-    #   puts messages.print_correct_positions(matcher.correct_positions)
-    # end
-    puts messages.print_correct_colors
-    puts color_match(input)
-    puts exact_match(input)
-    puts guesses
+    matcher = Matcher.new(input, secret)
+    
+    if matcher.correct?
+      #########[messages.win, :win]
+    else
+      correct_colors = matcher.correct_colors
+      correct_positions = matcher.correct_positions
+      [messages.guess_feedback(correct_colors, correct_positions), :continue]
+    end
   end
 end
