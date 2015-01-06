@@ -42,4 +42,11 @@ class MatcherTest < Minitest::Test
     matcher = Matcher.new(guess, secret)
     assert_equal 2, matcher.correct_colors
   end
+
+  def test_how_many_correct_positions_in_guess
+    guess = 'grrr'
+    secret = 'byrr'
+    matcher = Matcher.new(guess, secret)
+    assert_equal 2, matcher.correct_positions
+  end
 end

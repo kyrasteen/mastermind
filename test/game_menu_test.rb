@@ -1,11 +1,10 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative 'test_helper.rb'
 require_relative '../lib/game_menu'
 
 class GameMenuTest < Minitest::Test
   def setup
     messages = Messages.new
-    @gm = GameMenu.new(messages)
+    @gm = GameMenu.new
   end
 
   def test_it_has_instructions
@@ -19,4 +18,11 @@ class GameMenuTest < Minitest::Test
     assert output.include?('Thanks')
     assert_equal signal, :stop
   end
+
+  def test_menu_is_active_until_played_game
+    assert @gm.active?
+    @gm.menu('p')
+    assert @gm.active? == false
+  end
+
 end

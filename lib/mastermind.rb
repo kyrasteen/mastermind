@@ -1,41 +1,31 @@
 require_relative 'messages'
+require_relative 'secret_creator'
+require_relative 'game_menu'
 require 'pry'
 
 class Mastermind
 
-  attr_reader :messages, :game_in_progress
-  attr_accessor :secret, :guess_count
+  attr_reader :messages, :menu, :secret
+  attr_accessor :guess_count, :game_in_progress
 
   def initialize(messages)
     @messages = messages
     @game_in_progress = false
     @guess_count = 0
+    @menu = GameMenu.new
+    @secret = SecretCreator.new.generate_secret
   end
 
+  # Add an active/not active state to the menu
+  # When the manu is active, keep running the menu loop
+  # When the game is active, run play_game
+  #   If the menu is inactive, the game is active
+  #   Also have @active instance variable
   def execute(input)
-    if !game_in_progress
-      game_menu(input)
+    if menu.active?
+      menu.menu(input)
     else
       play_game(input)
-    end
-  end
-
-  def generate_secret(size = 4)
-    charset = %w{B G R Y}
-    (0...size).map{ charset.to_a[rand(charset.size)] }
-  end
-
-  def game_menu(input)
-    if input == 'p'
-      @secret = generate_secret
-      @game_in_progress = true
-      [messages.take_guess, :continue]
-    elsif input == 'q'
-      [messages.quit_game, :stop]
-    elsif input == 'i'
-      [messages.instructions, :continue]
-    else
-      [messages.error, :continue]
     end
   end
 
@@ -63,14 +53,14 @@ class Mastermind
     elsif input == 'i'
        [messages.instructions, :continue]
     elsif input == 'h'
-       ["#{@secret[3]} is in the last position ", :continue]
+       ["#{secret[3]} is in the last position ", :continue]
     elsif input.length != 4
        [messages.wrong_number, :continue]
     end
   end
 
   def color_match(input)
-    colors = input.upcase.split('').find_all { |letter| @secret.include?(letter) }
+    colors = input.upcase.split('').find_all { |letter| secret.include?(letter) }
     colors = colors.uniq
     @guess_count += 1
 
@@ -84,7 +74,7 @@ class Mastermind
   end
 
   def exact_match(input)
-    matched = @secret.zip(input.upcase.split(''))
+    matched = secret.zip(input.upcase.split(''))
     match = matched.select { |a| a[0] == a[1] }
 
     if match.length.zero?
@@ -103,9 +93,20 @@ class Mastermind
   def play_game(input)
     @start_time = Time.now
 
+    # checking for non-guess input
+    # do guess validations (break out to separate class)
     return exceptions(input) if exceptions(input)
     return invalids(input) if invalids(input)
 
+    # doing the actual matching
+    # matcher = Matcher.new(input, secret)
+    # if matcher.correct?
+    #   win conditions
+    # else
+    #   puts messages.print_correct_colors(matcher.correct_colors)
+    #   puts messages.print_correct_positions(matcher.correct_positions)
+    # end
+    puts messages.print_correct_colors
     puts color_match(input)
     puts exact_match(input)
     puts guesses

@@ -11,7 +11,7 @@ class Matcher
   end
 
   def correct_colors
-    colors = guess.split('').find_all { |letter| secret.include?(letter) }
+    colors = guess.chars.find_all { |letter| secret.include?(letter) }
     colors.uniq.length
     # @guess_count += 1
 
@@ -22,5 +22,13 @@ class Matcher
     # else
     #   "'#{input}' has no colors guessed correctly. Really? Try again!"
     # end
+  end
+
+  # similar to correct_colors, return an integer of
+  # the guess' correct positons
+  def correct_positions
+    matched = secret.chars.zip(guess.chars)
+    match = matched.select { |a| a[0] == a[1] }
+    match.length
   end
 end
