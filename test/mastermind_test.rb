@@ -76,26 +76,23 @@ class MastermindTest < Minitest::Test
 
   def test_no_matches
     @mm.execute('p')
-    @mm.secret = 'bbgg'.split('')
-    output, signal = @mm.execute('ryby')
+    @mm.secret = 'BBGG'.split('')
+    output = @mm.exact_match('ryby')
     assert output.include?('no positions')
-    assert_equal signal, :continue
   end
 
   def test_matching_one_letter_at_correct_place
     @mm.execute('p')
-    @mm.secret = 'rrby'.split('')
-    output, signal = @mm.execute('ggbr')
+    @mm.secret = 'RRBY'.split('')
+    output = @mm.exact_match('ggbr')
     assert output.include?('correct')
-    assert_equal signal, :continue
   end
 
-  def test_matching_more_than_one_letter
+  def test_matching_more_than_one_letter_at_correct_place
     @mm.execute('p')
-    @mm.secret = 'yygg'.split('')
-    output, signal = @mm.execute('Yggg')
+    @mm.secret = 'YYGG'.split('')
+    output = @mm.exact_match('Yggg')
     assert output.include?('correct')
-    assert signal, :continue
   end
 
   def test_it_keeps_count_of_guesses
@@ -107,17 +104,25 @@ class MastermindTest < Minitest::Test
 
   def test_it_keeps_time
     @mm.execute('p')
-    @mm.secret = 'ggbb'.split('')
-    output, signal = @mm.execute('ggbb')
+    @mm.secret = 'GGBB'.split('')
+    @mm.execute('gggg')
+    @mm.execute('yyyy')
+    output = @mm.exact_match('ggbb')
     assert output.include?('and took')
-    assert_equal signal, :continue
   end
 
   def test_it_wins
     @mm.execute('p')
-    @mm.secret = 'bbgb'.split('')
-    output, signal = @mm.execute("bbgb")
+    @mm.secret = 'BBGB'.split('')
+    @mm.execute('gggg')
+    @mm.execute('yyyy')
+    output = @mm.exact_match("bbgb")
     assert output.include?("Congratulations!")
-    assert_equal signal, :continue
+  end
+
+  def test_it_fully_executes
+    @mm.execute('p')
+    output = @mm.execute('gggy')
+    assert output.include?('guessed')
   end
 end

@@ -41,9 +41,9 @@ class Mastermind
 
   def guesses
     if @guess_count > 1
-      puts "You have guessed #{@guess_count} times"
+      "You have guessed #{@guess_count} times\n"
     else
-      puts "You have guessed one time."
+      "You have guessed one time\n"
     end
   end
 
@@ -71,12 +71,14 @@ class Mastermind
 
   def color_match(input)
     colors = input.upcase.split('').find_all { |letter| @secret.include?(letter) }
+    colors = colors.uniq
+    @guess_count += 1
 
-    if colors.length >= 1
-      @guess_count += 1
-      "'#{input}' has #{colors.uniq.length} correct colors."
+    if colors.length >= 2
+      "'#{input}' has #{colors.length} correct colors."
+    elsif colors.length == 1
+      "'#{input}' has #{colors.length} correct color."
     else
-      @guess_count += 1
       "'#{input}' has no colors guessed correctly. Really? Try again!"
     end
   end
@@ -86,14 +88,15 @@ class Mastermind
     match = matched.select { |a| a[0] == a[1] }
 
     if match.length.zero?
-      ["You guessed no positions correctly\n\n", :continue]
+      "You guessed no positions correctly"
     elsif match.length == 4
       end_time = Time.now
       timer = end_time - @start_time
-      ["Congratulations! You have won the game with sequence '#{input}'!\n You took #{@guess_count} guesses and took #{timer}.\n Hit 'p' to play again or 'quit' to quit.>", :continue]
+      "Congratulations! You have won the game with sequence '#{input}'!\n You took #{@guess_count} guesses and took #{timer}.\n Hit 'p' to play again or 'quit' to quit."
+    elsif match.length == 1
+      "'#{input}' has #{match.length} letter at the correct position."
     else
-      exact_match = "'#{input}' has #{match.length} letters at the correct position.\n\n"
-      [exact_match, :continue]
+      "'#{input}' has #{match.length} letters at the correct position."
     end
   end
 
@@ -104,8 +107,7 @@ class Mastermind
     return invalids(input) if invalids(input)
 
     puts color_match(input)
-    guesses
-    exact_match(input)
-
+    puts exact_match(input)
+    puts guesses
   end
 end
