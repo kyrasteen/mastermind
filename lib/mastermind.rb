@@ -9,12 +9,12 @@ class Mastermind
   attr_reader :messages, :menu, :secret
   attr_accessor :guess_count, :game_in_progress
 
-  def initialize(messages)
-    @messages = messages
+  def initialize
     @game_in_progress = false
     @guess_count = 0
-    @menu = GameMenu.new
-    @secret = SecretCreator.new.generate_secret
+    @messages = Messages.new
+    @menu     = GameMenu.new
+    @secret   = SecretCreator.new.generate_secret
   end
 
   def execute(input)
@@ -63,9 +63,9 @@ class Mastermind
     return invalids(input) if invalids(input)
 
     matcher = Matcher.new(input, secret)
-    
+
     if matcher.correct?
-      #########[messages.win, :win]
+      #[messages.win, :win]
     else
       correct_colors = matcher.correct_colors
       correct_positions = matcher.correct_positions

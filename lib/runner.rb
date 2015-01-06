@@ -2,7 +2,7 @@ require_relative 'messages'
 require_relative 'mastermind'
 
 messages = Messages.new
-mastermind = Mastermind.new(messages)
+mastermind = Mastermind.new
 
 puts messages.welcome_message
 
