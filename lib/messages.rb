@@ -1,6 +1,5 @@
 
 class Messages
-
   def welcome_message
     "Welcome to MASTERMIND, \nhit 'p' for play, 'i' for instructions, 'h' for hint after game has begun,'q' to quit a round, or 'quit' to end a game!"
   end
@@ -31,5 +30,9 @@ class Messages
 
   def wrong_number
     "Please enter four letters ONLY."
+  end
+
+  def guess_feedback(correct_colors, correct_positions)
+    "You guessed #{correct_colors} correct color(s) and #{correct_positions} correct position(s)"
   end
 end
