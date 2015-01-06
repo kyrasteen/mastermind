@@ -74,6 +74,14 @@ class MastermindTest < Minitest::Test
     assert signal, :continue
   end
 
+  def test_no_matches
+    @mm.execute('p')
+    @mm.secret = 'bbgg'.split('')
+    output, signal = @mm.execute('ryby')
+    assert output.include?('no positions')
+    assert_equal signal, :continue
+  end
+
   def test_matching_one_letter_at_correct_place
     @mm.execute('p')
     @mm.secret = 'rrby'.split('')
@@ -97,11 +105,19 @@ class MastermindTest < Minitest::Test
     assert_equal @mm.guess_count, 2
   end
 
+  def test_it_keeps_time
+    @mm.execute('p')
+    @mm.secret = 'ggbb'.split('')
+    output, signal = @mm.execute('ggbb')
+    assert output.include?('and took')
+    assert_equal signal, :continue
+  end
+
   def test_it_wins
     @mm.execute('p')
     @mm.secret = 'bbgb'.split('')
     output, signal = @mm.execute("bbgb")
-    assert output.include?("correct")
+    assert output.include?("Congratulations!")
     assert_equal signal, :continue
   end
 end
