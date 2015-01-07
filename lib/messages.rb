@@ -32,8 +32,8 @@ class Messages
     "Please enter four letters ONLY."
   end
 
-  def win
-    "Congratulations, you have won!"
+  def win(guess_count, time)
+    "Congratulations, you have won the game with #{guess_count} guesses and took #{time}to finish"
   end
 
   def guess_feedback(correct_colors, correct_positions)

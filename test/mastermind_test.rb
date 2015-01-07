@@ -35,7 +35,7 @@ class MastermindTest < Minitest::Test
   end
 
   def test_it_ends_a_game
-    output, signal = @mm.execute('q')
+    output, signal = @mm.execute('quit')
     assert output.include?('Thanks')
     assert_equal signal, :stop
   end
@@ -60,26 +60,26 @@ class MastermindTest < Minitest::Test
     assert signal, :continue
   end
 
-  def test_no_matches
-    @mm.execute('p')
-    @mm.secret = 'BBGG'.split('')
-    output = @mm.exact_match('ryby')
-    assert output.include?('no positions')
-  end
+  # def test_no_matches
+  #   @mm.execute('p')
+  #   @mm.secret = 'BBGG'.split('')
+  #   output = @mm.exact_match('ryby')
+  #   assert output.include?('no positions')
+  # end
 
-  def test_matching_one_letter_at_correct_place
-    @mm.execute('p')
-    @mm.secret = 'RRBY'.split('')
-    output = @mm.exact_match('ggbr')
-    assert output.include?('correct')
-  end
+  # def test_matching_one_letter_at_correct_place
+  #   @mm.execute('p')
+  #   @mm.secret = 'RRBY'.split('')
+  #   output = @mm.exact_match('ggbr')
+  #   assert output.include?('correct')
+  # end
 
-  def test_matching_more_than_one_letter_at_correct_place
-    @mm.execute('p')
-    @mm.secret = 'YYGG'.split('')
-    output = @mm.exact_match('Yggg')
-    assert output.include?('correct')
-  end
+  # def test_matching_more_than_one_letter_at_correct_place
+  #   @mm.execute('p')
+  #   @mm.secret = 'YYGG'.split('')
+  #   output = @mm.exact_match('Yggg')
+  #   assert output.include?('correct')
+  # end
 
   def test_it_keeps_count_of_guesses
     @mm.execute('p')
@@ -90,11 +90,12 @@ class MastermindTest < Minitest::Test
 
   def test_it_keeps_time
     @mm.execute('p')
-    @mm.secret = 'GGBB'.split('')
+    @mm.secret = 'GGBB'
     @mm.execute('gggg')
     @mm.execute('yyyy')
-    output = @mm.exact_match('ggbb')
+    output, signal = @mm.execute('ggbb')
     assert output.include?('and took')
+    assert_equal signal, :win
   end
 
   def test_it_wins

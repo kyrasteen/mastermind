@@ -12,10 +12,14 @@ class Mastermind
     @guess_count = 0
     @messages = Messages.new
     @secret   = SecretCreator.new.generate_secret
+    @start_time = Time.now
+  end
+
+  def timer
+    Time.now - @start_time
   end
 
   def execute(input)
-    @start_time = Time.now
     puts "Secret: #{secret}"
 
     return exceptions(input) if exceptions(input)
@@ -24,8 +28,11 @@ class Mastermind
     matcher = Matcher.new(input, secret)
 
     if matcher.correct?
-      [messages.win, :win]
+      # @guess_count
+      # timer
+      [messages.win(@guess_count, timer), :win]
     else
+      @guess_count += 1
       correct_colors = matcher.correct_colors
       correct_positions = matcher.correct_positions
       [messages.guess_feedback(correct_colors, correct_positions), :continue]
