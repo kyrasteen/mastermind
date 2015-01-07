@@ -32,6 +32,10 @@ class Messages
     "Please enter four letters ONLY."
   end
 
+  def win
+    "Congratulations, you have won!"
+  end
+
   def guess_feedback(correct_colors, correct_positions)
     "You guessed #{correct_colors} correct color(s) and #{correct_positions} correct position(s)"
   end
