@@ -35,15 +35,7 @@ class Mastermind
       @guess_count += 1
       correct_colors = matcher.correct_colors
       correct_positions = matcher.correct_positions
-      [messages.guess_feedback(correct_colors, correct_positions), :continue]
-    end
-  end
-
-  def guesses
-    if @guess_count > 1
-      "You have guessed #{@guess_count} times\n"
-    else
-      "You have guessed one time\n"
+      [messages.guess_feedback(correct_colors, correct_positions, @guess_count), :continue]
     end
   end
 

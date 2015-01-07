@@ -36,7 +36,7 @@ class Messages
     "Congratulations, you have won the game with #{guess_count} guesses and took #{time} seconds to finish"
   end
 
-  def guess_feedback(correct_colors, correct_positions)
-    "You guessed #{correct_colors} correct color(s) and #{correct_positions} correct position(s)"
+  def guess_feedback(correct_colors, correct_positions, guess_count)
+    "You guessed #{correct_colors} correct color(s) and #{correct_positions} correct position(s). You have taken #{guess_count} guesses."
   end
 end
