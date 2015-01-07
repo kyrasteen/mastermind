@@ -11,14 +11,6 @@ class MastermindTest < Minitest::Test
     assert Mastermind
   end
 
-  def test_it_starts_a_game
-    assert @mm.secret.nil?
-    output, signal = @mm.execute('p')
-    assert @mm.secret.is_a?(Array)
-    assert output.include?('What do you think')
-    assert_equal signal, :continue
-  end
-
   def test_it_only_takes_four_letters_in_guess
     @mm.execute('p')
     @mm.secret = 'RGGB'.split('')
@@ -99,17 +91,17 @@ class MastermindTest < Minitest::Test
   end
 
   def test_it_wins
-    @mm.execute('p')
-    @mm.secret = 'BBGB'.split('')
+    @mm.secret = 'BBGB'
     @mm.execute('gggg')
     @mm.execute('yyyy')
-    output = @mm.exact_match("bbgb")
-    assert output.include?("Congratulations!")
+    output, signal = @mm.execute("bbgb")
+    assert output.include?("Congratulations")
+    assert signal = :win
   end
 
-  def test_it_fully_executes
-    @mm.execute('p')
-    output = @mm.execute('gggy')
-    assert output.include?('guessed')
-  end
+  # def test_it_fully_executes
+  #   @mm.execute('p')
+  #   output = @mm.execute('gggy')
+  #   assert output.include?('guessed')
+  # end
 end

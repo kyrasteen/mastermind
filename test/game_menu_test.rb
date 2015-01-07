@@ -26,4 +26,12 @@ class GameMenuTest < Minitest::Test
     assert menu.active? == false
   end
 
+  def test_it_starts_a_game
+    assert @active = true
+    output, signal = @menu.execute('p')
+    assert output.include?('What do you think')
+    assert_equal signal, :continue
+    # assert @active = false
+  end
+
 end
