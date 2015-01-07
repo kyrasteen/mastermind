@@ -4,8 +4,7 @@ require_relative '../lib/mastermind'
 class MastermindTest < Minitest::Test
 
   def setup
-    messages = Messages.new
-    @mm = Mastermind.new(messages)
+    @mm = Mastermind.new
   end
 
   def test_it_exists
