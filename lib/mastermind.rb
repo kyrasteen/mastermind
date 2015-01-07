@@ -10,7 +10,7 @@ class Mastermind
 
   def initialize
     @game_in_progress = false
-    @guess_count = 1
+    @guess_count = 0
     @messages   = Messages.new
     @secret     = SecretCreator.new.generate_secret
     @start_time = Time.now
@@ -30,6 +30,7 @@ class Mastermind
     matcher = Matcher.new(input, secret)
 
     if matcher.correct?
+      self.guess_count += 1
       [messages.win(guess_count, timer), :win]
     else
       self.guess_count += 1
