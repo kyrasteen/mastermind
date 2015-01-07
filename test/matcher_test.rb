@@ -3,20 +3,6 @@ require_relative '../lib/matcher'
 
 class MatcherTest < Minitest::Test
 
-  # Matcher objects take a guess and a secret
-  # check if guess is correct
-  # return the amount of correct colors
-  # return the amount of correct positions
-  # Matcher#correct?
-  # Matcher#correct_colors
-  # Matcher#correct_positions
-
-  # Setup
-  # exercise
-  # verify
-  # teardown
-
-
   def test_it_exists
     matcher = Matcher.new('kyra', 'cool')
     assert matcher

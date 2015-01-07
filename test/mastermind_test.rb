@@ -52,27 +52,6 @@ class MastermindTest < Minitest::Test
     assert signal, :continue
   end
 
-  # def test_no_matches
-  #   @mm.execute('p')
-  #   @mm.secret = 'BBGG'.split('')
-  #   output = @mm.exact_match('ryby')
-  #   assert output.include?('no positions')
-  # end
-
-  # def test_matching_one_letter_at_correct_place
-  #   @mm.execute('p')
-  #   @mm.secret = 'RRBY'.split('')
-  #   output = @mm.exact_match('ggbr')
-  #   assert output.include?('correct')
-  # end
-
-  # def test_matching_more_than_one_letter_at_correct_place
-  #   @mm.execute('p')
-  #   @mm.secret = 'YYGG'.split('')
-  #   output = @mm.exact_match('Yggg')
-  #   assert output.include?('correct')
-  # end
-
   def test_it_keeps_count_of_guesses
     @mm.execute('p')
     @mm.execute('gggy')
@@ -99,9 +78,4 @@ class MastermindTest < Minitest::Test
     assert signal = :win
   end
 
-  # def test_it_fully_executes
-  #   @mm.execute('p')
-  #   output = @mm.execute('gggy')
-  #   assert output.include?('guessed')
-  # end
 end
