@@ -20,6 +20,7 @@ class GameMenu
   def execute(input)
     case input
     when 'q' then [messages.quit_game, :stop]
+    when 'quit' then [messages.quit_game, :stop]
     when 'i' then [messages.instructions, :continue]
     when 'p'
       @active = false
