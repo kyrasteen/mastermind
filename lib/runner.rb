@@ -1,13 +1,12 @@
-require_relative 'messages'
+
 require_relative 'mastermind'
 require_relative 'game_menu'
 
 class Runner
 
-  attr_reader :messages, :mastermind, :menu
+  attr_reader :mastermind, :menu
 
   def initialize
-    @messages = Messages.new
     @mastermind = Mastermind.new
     @menu = GameMenu.new
   end
