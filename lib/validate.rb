@@ -2,7 +2,7 @@ require_relative 'messages'
 
 class Validate
 
-  attr_reader :messages, :secret
+  attr_reader :messages
 
   def initialize
     @messages = Messages.new
