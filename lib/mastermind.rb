@@ -10,14 +10,15 @@ class Mastermind
 
   def initialize
     @game_in_progress = false
-    @guess_count = 0
+    @guess_count = 1
     @messages   = Messages.new
     @secret     = SecretCreator.new.generate_secret
     @start_time = Time.now
   end
 
   def timer
-    Time.now - @start_time
+    timer = Time.now - @start_time
+    timer = timer.divmod(60.0)
   end
 
   def execute(input)
@@ -29,12 +30,12 @@ class Mastermind
     matcher = Matcher.new(input, secret)
 
     if matcher.correct?
-      [messages.win(@guess_count, timer), :win]
+      [messages.win(guess_count, timer), :win]
     else
-      @guess_count += 1
+      self.guess_count += 1
       correct_colors = matcher.correct_colors
       correct_positions = matcher.correct_positions
-      [messages.guess_feedback(correct_colors, correct_positions, @guess_count), :continue]
+      [messages.guess_feedback(correct_colors, correct_positions, guess_count), :continue]
     end
   end
 

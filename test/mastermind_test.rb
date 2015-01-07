@@ -23,7 +23,7 @@ class MastermindTest < Minitest::Test
     @mm.execute('p')
     @mm.secret = 'GGBB'
     time = @mm.timer
-    assert time.is_a?(Float)
+    assert time.is_a?(Array)
     output, signal = @mm.execute('ggbb')
     assert output.include?('and took')
     assert_equal signal, :win
