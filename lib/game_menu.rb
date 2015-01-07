@@ -12,15 +12,13 @@ class GameMenu
     @active
   end
 
-  def menu(input)
-    puts "Start of menu loop"
-    if input == 'p'
+  def execute(input)
+    case input
+    when 'q' then [messages.quit_game, :stop]
+    when 'i' then [messages.instructions, :continue]
+    when 'p'
       @active = false
       [messages.take_guess, :continue]
-    elsif input == 'q'
-      [messages.quit_game, :stop]
-    elsif input == 'i'
-      [messages.instructions, :continue]
     else
       [messages.error, :continue]
     end
