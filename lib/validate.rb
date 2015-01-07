@@ -1,5 +1,4 @@
 require_relative 'messages'
-require_relative 'secret_creator'
 
 class Validate
 
@@ -7,7 +6,6 @@ class Validate
 
   def initialize
     @messages = Messages.new
-    @secret = SecretCreator.new.generate_secret
   end
 
   def invalids(input)
@@ -18,7 +16,7 @@ class Validate
     end
   end
 
-  def exceptions(input)
+  def exceptions(input, secret)
     if input == 'q'
       [messages.end_round, :continue]
     elsif input == 'quit'

@@ -21,9 +21,10 @@ class Mastermind
   end
 
   def execute(input)
-     validator = Validate.new
-     return validator.exceptions(input) if validator.exceptions(input)
-     return validator.invalids(input) if validator.invalids(input)
+    puts "secret is #{secret}"
+    validator = Validate.new
+    return validator.exceptions(input, secret) if validator.exceptions(input, secret)
+    return validator.invalids(input) if validator.invalids(input)
 
     matcher = Matcher.new(input, secret)
 
