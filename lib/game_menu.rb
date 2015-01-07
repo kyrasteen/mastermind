@@ -12,6 +12,11 @@ class GameMenu
     @active
   end
 
+  def start
+    @active = true
+    [messages.welcome_message, :continue]
+  end
+
   def execute(input)
     case input
     when 'q' then [messages.quit_game, :stop]
