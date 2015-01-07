@@ -1,6 +1,7 @@
 require_relative 'messages'
 require_relative 'matcher'
 require_relative 'secret_creator'
+require_relative 'validate'
 
 class Mastermind
 
@@ -20,10 +21,9 @@ class Mastermind
   end
 
   def execute(input)
-     puts "Secret: #{secret}"
-
-    return exceptions(input) if exceptions(input)
-    return invalids(input) if invalids(input)
+     validator = Validate.new
+     return validator.exceptions(input) if validator.exceptions(input)
+     return validator.invalids(input) if validator.invalids(input)
 
     matcher = Matcher.new(input, secret)
 
@@ -38,26 +38,5 @@ class Mastermind
       [messages.guess_feedback(correct_colors, correct_positions, @guess_count), :continue]
     end
   end
-
-  def invalids(input)
-    invalids = input.upcase.split('').select { |i| i =~ /[^RGBY]/ }
-
-    if invalids.length > 0
-       [messages.invalid_letter, :continue]
-    end
-  end
-
-  def exceptions(input)
-    if input == 'q'
-       [messages.end_round, :continue]
-    elsif input == 'quit'
-       [messages.quit_game, :stop]
-    elsif input == 'i'
-       [messages.instructions, :continue]
-    elsif input == 'h'
-       ["#{secret[3]} is in the last position ", :continue]
-    elsif input.length != 4
-       [messages.wrong_number, :continue]
-    end
-  end
+  
 end
