@@ -1,27 +1,34 @@
 require_relative 'messages'
-require_relative 'secret_creator'
-require_relative 'game_menu'
 require_relative 'matcher'
-require 'pry'
+require_relative 'secret_creator'
 
 class Mastermind
 
-  attr_reader :messages, :menu, :secret
-  attr_accessor :guess_count, :game_in_progress
+  attr_reader :messages
+  attr_accessor :guess_count, :secret, :game_in_progress
 
   def initialize
     @game_in_progress = false
     @guess_count = 0
     @messages = Messages.new
-    @menu     = GameMenu.new
     @secret   = SecretCreator.new.generate_secret
   end
 
   def execute(input)
-    if menu.active?
-      menu.menu(input)
+    @start_time = Time.now
+    puts "Secret: #{secret}"
+
+    return exceptions(input) if exceptions(input)
+    return invalids(input) if invalids(input)
+
+    matcher = Matcher.new(input, secret)
+
+    if matcher.correct?
+      [messages.win, :win]
     else
-      play_game(input)
+      correct_colors = matcher.correct_colors
+      correct_positions = matcher.correct_positions
+      [messages.guess_feedback(correct_colors, correct_positions), :continue]
     end
   end
 
@@ -52,24 +59,6 @@ class Mastermind
        ["#{secret[3]} is in the last position ", :continue]
     elsif input.length != 4
        [messages.wrong_number, :continue]
-    end
-  end
-
-  def play_game(input)
-    @start_time = Time.now
-    puts "Secret: #{secret}"
-
-    return exceptions(input) if exceptions(input)
-    return invalids(input) if invalids(input)
-
-    matcher = Matcher.new(input, secret)
-
-    if matcher.correct?
-      #[messages.win, :win]
-    else
-      correct_colors = matcher.correct_colors
-      correct_positions = matcher.correct_positions
-      [messages.guess_feedback(correct_colors, correct_positions), :continue]
     end
   end
 end
