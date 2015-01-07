@@ -1,16 +1,48 @@
 require_relative 'messages'
 require_relative 'mastermind'
+require_relative 'game_menu'
 
-messages = Messages.new
-mastermind = Mastermind.new
+class Runner
 
-puts messages.welcome_message
+  attr_reader :messages, :mastermind, :menu
 
-signal = :continue
+  def initialize
+    @messages = Messages.new
+    @mastermind = Mastermind.new
+    @menu = GameMenu.new
+  end
 
-until signal == :stop
-  print "> "
-  input = gets.chomp
-  output, signal = mastermind.execute(input)
-  puts output
+  def run
+    feedback = menu.start
+    output = feedback[0]
+    signal = feedback[1]
+    puts output
+
+
+    until signal == :stop
+      print "> "
+      input = gets.chomp
+
+      if menu.active?
+        feedback = menu.execute(input)
+      else
+        feedback = mastermind.execute(input)
+        message = feedback[0]
+        signal  = feedback[1]
+
+        if signal == :win
+          puts message
+          @mastermind = Mastermind.new
+          feedback = menu.start
+        end
+      end
+
+      output = feedback[0]
+      signal = feedback[1]
+      puts output
+    end
+  end
 end
+
+runner = Runner.new
+runner.run
