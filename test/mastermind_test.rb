@@ -8,10 +8,11 @@ class MastermindTest < Minitest::Test
   end
 
   def test_it_exists
-    assert Mastermind
+    assert @mm
   end
 
   def test_it_keeps_count_of_guesses
+    @mm.guess_count = 0
     @mm.execute('p')
     @mm.execute('gggy')
     @mm.execute('gbgr')
@@ -21,8 +22,8 @@ class MastermindTest < Minitest::Test
   def test_it_keeps_time
     @mm.execute('p')
     @mm.secret = 'GGBB'
-    @mm.execute('gggg')
-    @mm.execute('yyyy')
+    time = @mm.timer
+    assert time.is_a?(Float)
     output, signal = @mm.execute('ggbb')
     assert output.include?('and took')
     assert_equal signal, :win

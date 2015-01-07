@@ -28,8 +28,6 @@ class Mastermind
     matcher = Matcher.new(input, secret)
 
     if matcher.correct?
-      @guess_count
-      timer
       [messages.win(@guess_count, timer), :win]
     else
       @guess_count += 1
@@ -38,5 +36,5 @@ class Mastermind
       [messages.guess_feedback(correct_colors, correct_positions, @guess_count), :continue]
     end
   end
-  
+
 end
