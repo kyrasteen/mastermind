@@ -22,7 +22,6 @@ class Mastermind
   end
 
   def execute(input)
-    puts "secret is #{secret}"
     validator = Validate.new
     return validator.exceptions(input, secret) if validator.exceptions(input, secret)
     return validator.invalids(input) if validator.invalids(input)

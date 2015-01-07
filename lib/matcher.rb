@@ -13,7 +13,6 @@ class Matcher
   def correct_colors
     colors = guess.chars.find_all { |letter| secret.include?(letter) }
     colors.uniq.length
-    # @guess_count += 1
   end
 
   def correct_positions
