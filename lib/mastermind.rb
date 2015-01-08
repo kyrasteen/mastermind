@@ -6,10 +6,9 @@ require_relative 'validate'
 class Mastermind
 
   attr_reader :messages
-  attr_accessor :guess_count, :secret, :game_in_progress
+  attr_accessor :guess_count, :secret
 
   def initialize
-    @game_in_progress = false
     @guess_count = 0
     @messages   = Messages.new
     @secret     = SecretCreator.new.generate_secret
@@ -22,6 +21,7 @@ class Mastermind
   end
 
   def execute(input)
+
     validator = Validate.new
     return validator.exceptions(input, secret) if validator.exceptions(input, secret)
     return validator.invalids(input) if validator.invalids(input)

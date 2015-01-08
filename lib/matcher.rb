@@ -1,3 +1,4 @@
+
 class Matcher
   attr_reader :guess, :secret
 

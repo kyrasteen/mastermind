@@ -21,7 +21,6 @@ class Runner
     until signal == :stop
       print "> "
       input = gets.chomp
-
       if menu.active?
         feedback = menu.execute(input)
       else
