@@ -37,6 +37,6 @@ class Messages
   end
 
   def guess_feedback(correct_colors, correct_positions, guess_count)
-    "You guessed #{correct_colors} correct color(s) and #{correct_positions} correct position(s). You have taken #{guess_count} guesse(s)."
+    "You guessed #{correct_colors} correct color(s) and #{correct_positions} correct position(s). You have taken #{guess_count} guess(es)."
   end
 end
